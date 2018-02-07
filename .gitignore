@@ -1,0 +1,13 @@
+*.json*
+.idea/
+*month*
+*conll*
+*todo*
+test*
+.Rhistory
+discarded*
+original_filenames.py
+UD_English-master
+UD_Swedish-master
+structure_data_json.txt
+
