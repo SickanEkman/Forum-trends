@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import ufal.udpipe
 
@@ -56,13 +57,30 @@ class Model:
         return output
 
 
-training_file_path = "UD_Swedish-master/sv-ud-train.conllu"
+training_file_path = "swedish-ud-2.0-170801.udpipe"
 #English: "UD_English-master/en-ud-train.conllu"
 #Swedish: "UD_Swedish-master/sv-ud-train.conllu"
 model = Model(training_file_path)
-forum_dir = os.fsencode("test_months/")  # change if other dirs wanted
-for forum_file in os.listdir(forum_dir):
-    with open(forum_file, "r") as fin:
+for dirpath, dirnames, filenames in os.walk("test_months/"):
+    file_list = [os.path.join(dirpath, filename) for filename in filenames]
+    for f in file_list:
+        with open(f, "r") as fin:
+            forum_text = fin.read()
+            sentences = model.tokenize(forum_text)
+            for s in sentences:
+                model.tag(s)
+            conllu = model.write(sentences, "conllu")
+            outfile_name = f[12:21] + ".conllu"
+            print(dirpath + outfile_name)
+            with open(os.path.join(dirpath, outfile_name), "w") as fout:
+                fout.write(conllu)
+            fout.close()
+        fin.close()
+
+#forum_dir = os.fsencode("test_months/")  # change if other dirs wanted
+#for forum_file in os.listdir(forum_dir):
+
+'''    with open(forum_file, "r") as fin:
         forum_text = fin.read()
         sentences = model.tokenize(forum_text)
         for s in sentences:
@@ -70,3 +88,4 @@ for forum_file in os.listdir(forum_dir):
             model.parse(s)
         conllu = model.write(sentences, "conllu")
     fin.close()
+'''
