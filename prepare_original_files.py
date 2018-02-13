@@ -48,7 +48,7 @@ def separate_each_month(mod_file):
     try:
         os.mkdir(subdir)
     except FileExistsError:
-        print("couldn't make the subdir:", mod_file + ". Nice :)")
+        print("Directory '%s' already exists." % mod_file)
     with open(mod_file, "r") as fin:
         forum_text = json.load(fin)
         for date, texts in forum_text.items():
