@@ -6,11 +6,6 @@ import os.path
 
 def create_work_files(og_file):
     """
-    Takes an original forum file, saves to dict:
-    * Text in original forum post
-    * Text in comments
-    * Date with format YYYY-MM
-    Save format: {"2016-01": ["Post text","Another text"] "2015-05":, [...]}
     :param og_file: the original forum json-file with no modifications
     :return: writes dict to output file, example names: data_a.json, data_k.json
     """
@@ -40,7 +35,6 @@ def create_work_files(og_file):
 
 def separate_each_month(mod_file):
     """
-    opens modified file containing a specific forum and saves every month within the forum to separate file.
     :param mod_file: modified forum file with date as dict key and list with texts as value
     :return: files for each month, with all text joined, example path: "m_months/m_2016-01.txt"
     """
