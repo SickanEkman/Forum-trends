@@ -53,7 +53,7 @@ class Model:
 # English: "english-ud-2.0-170801.udpipe"
 # Swedish: "swedish-ud-2.0-170801.udpipe"
 training_file = "swedish-ud-2.0-170801.udpipe"
-directory_name = "t_months/"
+directory_name = "k_months/"
 
 model = Model(training_file)
 for dirpath, dirnames, filenames in os.walk(directory_name):
