@@ -1,4 +1,3 @@
-import os
 from conllu import parse
 from collections import Counter
 
@@ -13,7 +12,6 @@ class Stopwords():
         self.files = list_with_files
         self.frequency_dict = self.count_frequency(self.files)
         self.stopword_list = self.create_stopwords(self.frequency_dict, number)
-
 
     def count_frequency(self, files):
         """
@@ -46,12 +44,3 @@ class Stopwords():
                                 )
         stoplist = frequency_list[:number]
         return stoplist
-
-
-directory_name = "k_months/"
-list_with_file_strings = []
-for dirpath, dirnames, f_names in os.walk(directory_name):
-    for f in f_names:
-        if f.endswith("conllu"):
-            list_with_file_strings.append(os.path.join(dirpath, f))
-stopword_list = Stopwords(list_with_file_strings).stopword_list
