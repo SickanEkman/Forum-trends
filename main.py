@@ -1,7 +1,7 @@
 # order:
 # 1. prepare_original_files. ALL FILES PREPARED ALREADY!
 # 2. tag_text
-# 3 create stopwords. todo: learn how to pickle!
+# 3 create stopwords.
 # 4. extract!
 import tag_text
 from tfidf import Tfidf
@@ -9,9 +9,17 @@ from stopwords import Stopwords
 import os
 import rake_tfidf
 from rake_only import Rake
+import pickle
 
 
 def create_list_of_files(dir, document, skip_doc_of_interest=True):
+    """
+    create list with file names of files to be analyzed in methods
+    :param dir: the directory name, ending with "/"
+    :param document: the full path/name of document of interest # todo: make this param optional
+    :param skip_doc_of_interest: If True, doc will not be included in final list
+    :return: list with file names (str)
+    """
     list_with_file_strings = []
     for dirpath, dirnames, f_names in os.walk(dir):
         for f in f_names:
@@ -32,11 +40,30 @@ def create_list_of_files(dir, document, skip_doc_of_interest=True):
         return None
 
 def txt_file_to_string(document):
+    """
+    Convert file content to a string, to be sent to analyzis
+    :param document: the full path/name of corresponding conllu document in same folder as .txt # todo: this seems stupid, change this
+    :return: a string with content of the document of interest
+    """
     txt_doc = document[:-6] + "txt"
-    with open(document, "r") as fin:
+    with open(txt_doc, "r") as fin:
         data = fin.read()
     fin.close()
     return data
+
+def unpickle_stopwords(directory, forum_nick, number=100):
+    """
+    :param directory: the directory name, ending with "/"
+    :param forum_nick: The forum name, ex "t"
+    :param number: number of words in the resulting stoplist. Default = 100
+    :return: list with n number of stop words
+    """
+    filename = directory + forum_nick + "_stoplist.pkl"
+    with open(filename, "rb") as fin:
+        frequency_list = pickle.load(fin)
+        fin.close()
+        stoplist = frequency_list[:number]
+        return stoplist
 
 def tag_forums(directory, language="Swedish"):
     """
@@ -56,30 +83,24 @@ def rake_tfidf_combined(stopwords, doc_of_interest):
     pass
     #todo: continue here! Maybe..?
 
-directory = "t_months/"
-doc_of_interest = "t_months/k_2009-01.conllu"
+forum_nick = "t"
+directory = forum_nick + "_months/"
+doc_of_interest = directory + forum_nick + "_2017-01.conllu"
 
 
 if __name__ == "__main__":
-    pass
     #tag_forums(directory)  # language="English" if not Swedish
-    list_with_conllu_files = create_list_of_files(directory, doc_of_interest)  # skip_doc_of_interest=False if not True
-    stopword_list_100 = Stopwords(list_with_conllu_files, number=100).stopword_list
-    print("stop1 done")
-    stopword_list_200 = Stopwords(list_with_conllu_files, number=200).stopword_list
-    print("stop2 done")
-    stopword_list_300 = Stopwords(list_with_conllu_files, number=300).stopword_list
-    print("stop3 done")
-    #simple_tfidf = Tfidf(doc_of_interest, list_with_conllu_files).tfidf
-    #rake_tfidf_combined(stopwords, doc_of_interest)
-    text_string = txt_file_to_string(doc_of_interest)
-    r1 = Rake(stopwords=stopword_list_100, language="swedish")
-    r1.extract_keywords_from_text(text_string)
-    print(r1.ranked_phrases)
-    r2 = Rake(stopwords=stopword_list_200, language="swedish")
-    r2.extract_keywords_from_text(text_string)
-    print(r2.ranked_phrases)
-    r3 = Rake(stopwords=stopword_list_300, language="swedish")
-    r3.extract_keywords_from_text(text_string)
-    print(r3.ranked_phrases)
+    #list_with_conllu_files = create_list_of_files(directory, doc_of_interest,)
+                                                                # skip_doc_of_interest=False if not True
+    #Stopwords(list_with_conllu_files, directory, forum_nick,)
+    #stopword_list = unpickle_stopwords(directory, forum_nick,)  # number=x if not 100
+
+    #simple_tfidf = Tfidf(doc_of_interest, list_with_conllu_files,).tfidf
+    #todo: everything above is working!
+    #text_string = txt_file_to_string(doc_of_interest,)
+    #r = Rake(stopwords=stopword_list, language="swedish",)
+    #r.extract_keywords_from_text(text_string,)
+    #print(r.ranked_phrases,)
+
+    # rake_tfidf_combined(stopwords, doc_of_interest)
 
