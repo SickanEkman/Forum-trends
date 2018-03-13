@@ -1,3 +1,5 @@
+# RAKE code from https://github.com/csurfer/rake-nltk/tree/master/rake_nltk
+
 import string
 from collections import defaultdict, Counter
 from itertools import chain, groupby, product
@@ -5,7 +7,7 @@ from itertools import chain, groupby, product
 import nltk
 from nltk.tokenize import wordpunct_tokenize
 
-"""
+
 # Ensure NLTK punkt package exists.
 try:
     _ = nltk.tokenize.word_tokenize('Test string.')
@@ -16,7 +18,6 @@ try:
     _ = nltk.corpus.stopwords.words('english')
 except Exception:
     nltk.download('stopwords')
-"""
 
 class Rake(object):
 
