@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+# Almost all code copied from:
+# https://github.com/ufal/udpipe/blob/master/bindings/python/examples/udpipe_model.py
+
 import os
 import ufal.udpipe
 
@@ -51,9 +53,12 @@ class Model:
 
 
 def create_tagged_files(training_file, directory_name):
+    file_list = []
     model = Model(training_file)
     for dirpath, dirnames, filenames in os.walk(directory_name):
-        file_list = [os.path.join(dirpath, filename) for filename in filenames]
+        for filename in filenames:
+            if filename.endswith("txt"):
+                file_list.append(os.path.join(dirpath, filename))
         for f in file_list:
             with open(f, "r") as fin:
                 forum_text = fin.read()
@@ -62,7 +67,6 @@ def create_tagged_files(training_file, directory_name):
                     model.tag(s)
                 conllu = model.write(sentences, "conllu")
                 outfile_name = f[9:18] + ".conllu"
-                print(dirpath + outfile_name)
                 with open(os.path.join(dirpath, outfile_name), "w") as fout:
                     fout.write(conllu)
                 fout.close()
