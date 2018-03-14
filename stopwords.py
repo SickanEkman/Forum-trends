@@ -3,7 +3,7 @@ from collections import Counter
 import pickle
 
 
-class Stopwords():
+class Stopwords:
     def __init__(self, list_with_files, directory_name, forum_nick):
         """
         Create a list with type frequencies INCLUDING punctuations
@@ -13,9 +13,9 @@ class Stopwords():
         """
         self.outfile_name = directory_name + forum_nick + "_stoplist.pkl"
         self.frequency_list = self.count_frequency(list_with_files)
-        self.pickle_frequency_list(self.frequency_list, self.outfile_name)
+        self.pickle_frequency_list(self.frequency_list, self.outfile_name,)
 
-    def count_frequency(self, files):
+    def count_frequency(self, files,):
         """
         Count frequencies for all lemmas in corpus
         :param files: list with paths to all conllu files in corpus
@@ -33,11 +33,11 @@ class Stopwords():
         frequency_list = sorted(
             counted,
             key=counted.__getitem__,
-            reverse=True
+            reverse=True,
         )
         return frequency_list
 
-    def pickle_frequency_list(self, frequency_list, outfile_name):
+    def pickle_frequency_list(self, frequency_list, outfile_name,):
         """
         pickle the frequency list and write it to file
         :param frequency_list: list with all types in corpus, sorted descending by frequency
@@ -45,6 +45,6 @@ class Stopwords():
         :return: file with pickled frequency list
         """
         with open(outfile_name, "wb") as fout:
-            pickle.dump(frequency_list, fout)
+            pickle.dump(frequency_list, fout,)
         fout.close()
 
