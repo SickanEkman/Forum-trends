@@ -3,7 +3,7 @@ from collections import Counter
 import math
 
 
-class Tfidf():
+class PureTfidf(object):
     def __init__(self, document, list_with_file_names):
         """
         :param document: path to document of interest
