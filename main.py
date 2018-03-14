@@ -4,12 +4,14 @@
 # 3 create stopwords.
 # 4. extract!
 import tag_text
-from tfidf import Tfidf
+from tfidf import PureTfidf
 from stopwords import Stopwords
 import os
 import rake_tfidf
 from rake_only import Rake
 import pickle
+from conllu import parse
+from average_sd import PureStatistics
 
 
 def create_list_of_files(dir, document, skip_doc_of_interest=True):
@@ -39,17 +41,33 @@ def create_list_of_files(dir, document, skip_doc_of_interest=True):
         print("No conllu files in directory")
         return None
 
-def txt_file_to_string(document):
+def txt_file_to_string(conllu_doc):
     """
-    Convert file content to a string, to be sent to analyzis
-    :param document: the full path/name of corresponding conllu document in same folder as .txt # todo: this seems stupid, change this
+    Convert txt-file content to a string, to be sent to analyze
+    :param conllu_doc: the full path/name of corresponding conllu document in same folder as .txt # todo: this seems stupid, change this
     :return: a string with content of the document of interest
     """
-    txt_doc = document[:-6] + "txt"
+    txt_doc = conllu_doc[:-6] + "txt"
     with open(txt_doc, "r") as fin:
         data = fin.read()
     fin.close()
     return data
+
+def conllu_file_to_string(conllu_doc):
+    """
+    Convert conllu-file content to a string, to be sent to analyze
+    :param conllu_doc: the full path/name of conllu document to be converted
+    :return: a string with content of the document of interest
+    """
+    with open(conllu_doc, "r") as fin:
+        data = fin.read()
+        fin.close()
+        list_words = []
+        for sentence in parse(data):
+            for word in sentence:
+                list_words.append(word["lemma"])
+        conllu_as_string = " ".join(list_words)
+        return conllu_as_string
 
 def unpickle_stopwords(directory, forum_nick, number=100):
     """
@@ -85,22 +103,24 @@ def rake_tfidf_combined(stopwords, doc_of_interest):
 
 forum_nick = "t"
 directory = forum_nick + "_months/"
-doc_of_interest = directory + forum_nick + "_2017-01.conllu"
+doc_of_interest = directory + forum_nick + "_2016-11.conllu"
 
 
 if __name__ == "__main__":
     #tag_forums(directory)  # language="English" if not Swedish
-    #list_with_conllu_files = create_list_of_files(directory, doc_of_interest,)
+    list_with_conllu_files = create_list_of_files(directory, doc_of_interest,)
                                                                 # skip_doc_of_interest=False if not True
     #Stopwords(list_with_conllu_files, directory, forum_nick,)
     #stopword_list = unpickle_stopwords(directory, forum_nick,)  # number=x if not 100
+    #simple_tfidf = PureTfidf(doc_of_interest, list_with_conllu_files,).tfidf
+    #txt_as_string = txt_file_to_string(doc_of_interest, )
+    #conllu_as_string = conllu_file_to_string(doc_of_interest)
 
-    #simple_tfidf = Tfidf(doc_of_interest, list_with_conllu_files,).tfidf
+    #simple_rake = Rake(stopwords=stopword_list, language="swedish",)
+    #simple_rake.extract_keywords_from_text(conllu_as_string,)
+    #print(simple_rake.ranked_phrases,)
+
     #todo: everything above is working!
-    #text_string = txt_file_to_string(doc_of_interest,)
-    #r = Rake(stopwords=stopword_list, language="swedish",)
-    #r.extract_keywords_from_text(text_string,)
-    #print(r.ranked_phrases,)
-
-    # rake_tfidf_combined(stopwords, doc_of_interest)
+    PureStatistics(doc_of_interest, list_with_conllu_files)
+    # rake_tfidf_combined(stopwords, doc_of_interest,)
 
