@@ -16,7 +16,7 @@ class PureTfidf(object):
         self.idf = self.count_idf(self.tf, self.corpus_dict)
         self.tfidf = self.count_tfidf(self.tf, self.idf)
         print("TF*IDF:")
-        print(sorted(self.tfidf.items(), key=lambda t:t[1], reverse=True))
+        print("sorted: ", sorted(self.tfidf.items(), key=lambda t:t[1], reverse=True))
 
     def parse_corpus_docs(self, list_with_file_names):
         """
